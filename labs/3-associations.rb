@@ -17,11 +17,38 @@ Activity.destroy_all
 # 1. insert 3 rows in the activities table with relationships to
 # a single salesperson and 2 different contacts
 
+# create new activity
+activity = Activity.new
+# update the contact id so it reflects the contact we're looking for
+activity["contact_id"] = Contact.find_by({"first_name" => "Tim", "last_name" => "Cook"})["id"]
+# update the salesperson id so it finds our salesperson
+activity["salesperson_id"] = Salesperson.find_by({"first_name" => "Jack", "last_name" => "Lydon"})["id"]
+# update notes
+activity["notes"] = "Closed the sale of Exxon Mobile to Apple"
+#save
+activity.save
+
+activity = Activity.new
+activity["contact_id"] = Contact.find_by({"first_name" => "Jeff", "last_name" => "Bezos"})["id"]
+activity["salesperson_id"] = Salesperson.find_by({"first_name" => "Umasai", "last_name" => "Vadlamaniac"})["id"]
+activity["notes"] = "Closed the sale of Barnes & Noble to Amazon"
+activity.save
+
+#puts activity.inspect
+
 # 2. Display all the activities between the salesperson used above
 # and one of the contacts (sample output below):
 
 # ---------------------------------
-# Activities between Ben and Tim Cook:
+
+activities = Activity.where({"salesperson_id" => Salesperson.find_by({"first_name" => "Jack", "last_name" => "Lydon"})["id"], "contact_id" => Contact.find_by({"first_name" => "Tim", "last_name" => "Cook"})["id"]})
+for activity in activities
+    note = activity["notes"]
+    puts "- #{note}"
+end 
+
+
+# Activities between Jack and Tim Cook:
 # - quick checkin over facetime
 # - met at Cupertino
 
